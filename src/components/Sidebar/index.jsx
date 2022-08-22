@@ -21,6 +21,8 @@ export default function Sidebar(props) {
         height: "600px",
         transition: "all 0.3s ease",
         overflow: "hidden",
+        boxShadow: isOpen ? "6px 0px 2px 1px rgba(0, 0, 0, .2)" : "unset"
+        
       }}
       onMouseLeave={() => setOpen(false)}
       onMouseEnter={() => setOpen(true)}

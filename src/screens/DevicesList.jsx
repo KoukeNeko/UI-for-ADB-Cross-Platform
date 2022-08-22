@@ -1,10 +1,8 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
 import { Routes, Route, Link } from "react-router-dom";
 
 
-import DeviceList from '../src/components/DeviceList'
+import DeviceList from '../components/DeviceList'
 
 
 function App() {
@@ -13,7 +11,7 @@ function App() {
     <>
       <div className="App">
         <header className="App-header">
-          {/* <DeviceList /> */}
+          <DeviceList />
         </header>
       </div>
     </>

@@ -10,6 +10,19 @@ import "react-pro-sidebar/dist/css/styles.css";
 import Sidebar from "./components/Sidebar";
 import App from "./App";
 import Uninstall from "./screens/Uninstall";
+import DeviceList from "./screens/DevicesList";
+
+import { appWindow } from "@tauri-apps/api/window";
+
+document
+  .getElementById("titlebar-minimize")
+  .addEventListener("click", () => appWindow.minimize());
+// document
+//   .getElementById('titlebar-maximize')
+//   .addEventListener('click', () => appWindow.toggleMaximize())
+document
+  .getElementById("titlebar-close")
+  .addEventListener("click", () => appWindow.close());
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -18,7 +31,7 @@ root.render(
       <div className="MainContainer">
         <Sidebar />
         <Routes>
-          <Route path="/" element={<App />} />
+          <Route path="/" element={<DeviceList />} />
           <Route path="/uninstall" element={<Uninstall />} />
         </Routes>
       </div>
