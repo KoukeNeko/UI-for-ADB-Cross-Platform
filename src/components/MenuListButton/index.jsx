@@ -37,7 +37,7 @@ export default function MenuListButton(props) {
                 height: '50px',
                 display: 'flex',
                 alignItems: 'center',
-                fontWeight: isSelected ? 'bold' : 'unset',
+                fontWeight: isSelected || props.isSelected ? 'bold' : 'unset',
             }}>
                 <div>{props.name}</div>
             </div>
