@@ -1,10 +1,59 @@
+.titlebar {
+  height: 45px;
+  background: #2d4654;
+  user-select: none;
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+.titlebar-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+}
+.titlebar-button:hover {
+  background: #5bbec3;
+}
+
+
+
+.MainContainer {
+  position: absolute;
+  flex-direction: row;
+  /* user-select: none; */
+  height: 600px;
+}
+
 .App {
+  position: relative;
   text-align: center;
+  padding-left: 50px;
+  /* left: 50px; */
+  width: 750px;
+  z-index: 0;
+  height: 600px;
+  overflow: hidden;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+.Sidebar-Container{
+  background-color: #243b4a;
+  /* width: 50px; */
+  display: flex;
+  position: absolute;
+  height: 100%;
+  z-index: 100;
+  left: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -14,10 +63,10 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #2d4654;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);

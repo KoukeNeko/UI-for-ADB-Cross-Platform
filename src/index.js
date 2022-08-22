@@ -1,13 +1,28 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ProSidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
+import "react-pro-sidebar/dist/css/styles.css";
+
+import Sidebar from "./components/Sidebar";
+import App from "./App";
+import Uninstall from "./screens/Uninstall";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <div className="MainContainer">
+        <Sidebar />
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/uninstall" element={<Uninstall />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

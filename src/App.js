@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { Routes, Route, Link } from "react-router-dom";
+import { appWindow } from "@tauri-apps/api/window";
+
+import DeviceList from '../src/components/DeviceList'
+
+document
+  .getElementById("titlebar-minimize")
+  .addEventListener("click", () => appWindow.minimize());
+// document
+//   .getElementById('titlebar-maximize')
+//   .addEventListener('click', () => appWindow.toggleMaximize())
+document
+  .getElementById("titlebar-close")
+  .addEventListener("click", () => appWindow.close());
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="App">
+        <header className="App-header">
+          <DeviceList />
+        </header>
+      </div>
+    </>
   );
 }
 
