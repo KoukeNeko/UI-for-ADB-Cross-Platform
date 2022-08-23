@@ -17,11 +17,18 @@
         "all": false,
         "execute": true,
         "open": true,
-        "scope": [{
-          "name": "devicesList",
-          "cmd": "adb",
-          "args": ["devices"]
-        }],
+        "scope": [
+          {
+            "name": "devicesList",
+            "cmd": "adb",
+            "args": ["devices"]
+          },
+          {
+            "name": "devicesInfo",
+            "cmd": "adb",
+            "args": ["-s",{ "validator": "\\S+" },"shell","getprop"]
+          }
+        ],
         "sidecar": false
       }
     },
@@ -72,7 +79,6 @@
         "title": "Uninstall Android App Without ROOT",
         "width": 800,
         "decorations": false
-        
       }
     ]
   }
