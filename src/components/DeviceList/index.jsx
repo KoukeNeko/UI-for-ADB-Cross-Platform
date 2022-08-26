@@ -10,32 +10,46 @@ export default function DeviceList() {
     //     alert(isViewNowIndex)
     // },[isViewNowIndex])
 
-    const TempList = ["R5CR30CVTZX device","emulator-5554 device", "emulator-5556 device"]
+    const TempList = ["R5CR30CVTZX device", "emulator-5554 device", "emulator-5556 device"]
 
     React.useEffect(() => {
         const getCMD = async () => {
             let output = await new Command("devicesList", ["devices"]).execute();
-            const devices = await String(output.stdout).split("\n");
-            // setDevices(devices);
+            const devicesList = await String(output.stdout).split("\n");
+            let devices = []
+            for(let i = 1 ; i < devicesList.length; i++) {
+                devices.push(devicesList[i].split("device")[0].trim());
+            }
+            setDevices(devices);
             return devices
-            
+
         };
 
-        getCMD()
-        .then((devices => {
-            setDevices(devices)
-            if (isViewNowIndex === "")
-            setIsViewNowIndex(devices[1])
-        }))
-        
+        // getCMD()
+        //     .then((devices => {
+        //         setDevices(devices)
+        //         if (isViewNowIndex === "")
+        //             setIsViewNowIndex(devices[1])
+        //     }))
+
 
         setTimeout(() => {
             getCMD()
-            .then((devices => setDevices(devices)))
+                // .then((devices => setDevices(devices)))
         }, 5000);
     });
 
-    
+    React.useEffect(() => {
+
+        const getCMD_Info = async () => {
+            let output = await new Command("devicesInfo", ["-s", isViewNowIndex, "shell", "getprop"]).execute();
+            const output_sp = await String(output.stdout);
+            setCurrentInfo(output_sp);
+            // alert(output_sp);
+        };
+        getCMD_Info();
+
+    }, [isViewNowIndex])
 
 
     return <div style={{
@@ -54,7 +68,7 @@ export default function DeviceList() {
             flexDirection: "column",
             marginLeft: "30px",
             gap: "10px",
-            
+
         }}>
 
             <h2>Devices List</h2>
@@ -65,36 +79,31 @@ export default function DeviceList() {
                     // if (isViewNowIndex === "null")
                     //     setIsViewNowIndex(index)
 
-                    if(device !== "List of devices attached" && device !== '')
+                    if (device !== "List of devices attached" && device !== '')
                         return (
-                            <div 
+                            <div
                                 key={index}
                                 style={{
-                                backgroundColor: (isViewNowIndex === index) ? "#87bcde" : "#243b4a", 
-                                height: "45px",
-                                marginRight: "15px", // to fix wired shader issue
-                                width: "auto",
-                                overflow: "hidden",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                cursor: "pointer",
-                                transition: "all 200ms linear",
-                                zIndex: (isViewNowIndex === index) ?  1000 : 1 ,
-                                borderRadius: "15px",
-                                boxShadow: "0px 0px 5px 1px rgba(0, 0, 0, .4) " ,
-                                
-                                
-                            }}
-                            onClick={() => {
-                                setIsViewNowIndex(index)
-                                // const getCMD = async () => {
-                                //     let output = await new Command("devicesList", ["devices"]).execute();
-                                //     const devices = await String(output.stdout).split("\n");
-                                //     setDevices(devices);
-                                // };
-                                // getCMD();
-                            }}
+                                    backgroundColor: (isViewNowIndex === index) ? "#87bcde" : "#243b4a",
+                                    height: "45px",
+                                    marginRight: "15px", // to fix wired shader issue
+                                    width: "auto",
+                                    overflow: "hidden",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    cursor: "pointer",
+                                    transition: "all 200ms linear",
+                                    zIndex: (isViewNowIndex === index) ? 1000 : 1,
+                                    borderRadius: "15px",
+                                    boxShadow: "0px 0px 5px 1px rgba(0, 0, 0, .4) ",
+
+
+                                }}
+                                onClick={() => {
+                                    setIsViewNowIndex(device)
+
+                                }}
                             >
                                 {device}
                             </div>
@@ -108,13 +117,14 @@ export default function DeviceList() {
             marginRight: "6%",
             marginBottom: "10%",
             zIndex: 100,
-            boxShadow: "0px 0px 5px 1px rgba(0, 0, 0, .4) " ,
-            borderRadius: "15px", 
+            boxShadow: "0px 0px 5px 1px rgba(0, 0, 0, .4) ",
+            borderRadius: "15px",
             // marginLeft: "-1px",
         }}>
             {/* detials */}
             <h2>Devices Info</h2>
             {isViewNowIndex}
+            {currentInfo}
         </div>
     </div>;
 }
