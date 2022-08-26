@@ -17,8 +17,20 @@
   width: 30px;
   height: 30px;
 }
-.titlebar-button:hover {
-  background: #5bbec3;
+#titlebar-minimize {
+  color: #243b4a
+}
+
+#titlebar-close {
+  color: #243b4a
+}
+
+#titlebar-minimize:hover {
+  color: #5bbec3 !important;
+}
+
+#titlebar-close:hover {
+  color: #b54d4d !important;
 }
 
 
