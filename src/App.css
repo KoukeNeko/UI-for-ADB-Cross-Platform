@@ -39,6 +39,7 @@
   z-index: 0;
   height: 600px;
   overflow: hidden;
+  background-color: #2d4654;
 }
 
 .App-logo {

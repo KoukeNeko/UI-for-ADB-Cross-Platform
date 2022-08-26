@@ -1,76 +1,112 @@
 import React from "react";
 import { Command } from "@tauri-apps/api/shell";
-import { RotateSpinner as Spinner} from "react-spinners-kit";
+import { RotateSpinner as Spinner, StageSpinner } from "react-spinners-kit";
 import { faTruckMedical } from "@fortawesome/free-solid-svg-icons";
 
 export default function DeviceList() {
     const [devices, setDevices] = React.useState([]);
     const [isViewNowIndex, setIsViewNowIndex] = React.useState("");
     const [currentInfo, setCurrentInfo] = React.useState([]);
-    const [isLoading, setIsLoading] = React.useState(true);
+    const [state, setState] = React.useState({
+        isLoading: true,
+        isLoading_Message: "Fetching Device List",
+        isLoading_Detial: true,
 
-    // React.useEffect(() => {
-    //     alert(isViewNowIndex)
-    // },[isViewNowIndex])
+    });
 
     const TempList = ["R5CR30CVTZX device", "emulator-5554 device", "emulator-5556 device"]
 
     React.useEffect(() => {
         const getCMD = async () => {
-            let output = await new Command("devicesList", ["devices"]).execute();
-            const devicesList = await String(output.stdout).split("\n");
-            let devices = []
-            for(let i = 1 ; i < devicesList.length; i++) {
-                devices.push(devicesList[i].split("device")[0].trim());
+            try {
+                const output = localStorage.getItem("device");
+                const devicesList = JSON.parse(output);
+
+                if (devicesList.length > 0) {
+                    console.log(devicesList)
+
+                    setDevices(devicesList)
+                    
+                    setState(pre => (
+                        {
+                            ...pre,
+                            isLoading: false
+                        }
+                    ));
+
+                } else {
+                    setIsViewNowIndex("")
+                    setState(pre => (
+                        {
+                            isLoading: true,
+                            isLoading_Detial: true,
+                            isLoading_Message: "No Devices. Try to Fetching again..",
+                        }
+                    ))
+                }
+            } catch (e) {
+               console.error(e)
             }
-            setDevices(devices);
-            if (isViewNowIndex === "")
-                setIsViewNowIndex(devices[0])
-            setIsLoading(false);
-            return devices
+
 
         };
 
-        // getCMD()
-        //     .then((devices => {
-        //         setDevices(devices)
-        //         
-        //     }))
+        if (isViewNowIndex == "")
+            handleSelectDevices(devices[0]);
 
-
-        setTimeout(() => {
+        setInterval(() => {
+            console.error(isViewNowIndex)
             getCMD()
-                // .then((devices => setDevices(devices)))
+
+            console.log("Fetching devices from localStorage...")
         }, 5000);
-    });
+    }, []);
 
     React.useEffect(() => {
+
+        setState(pre => (
+            {
+                ...pre,
+                isLoading_Detial: true
+            }
+        ))
 
         const getCMD_Info = async () => {
             let output = await new Command("devicesInfo", ["-s", isViewNowIndex, "shell", "getprop"]).execute();
             const output_sp = await String(output.stdout);
             setCurrentInfo(output_sp);
-            // alert(output_sp);
+
         };
         getCMD_Info();
+        setState(pre => (
+            {
+                ...pre,
+                isLoading_Detial: false
+            }
+        ))
 
     }, [isViewNowIndex])
 
-    
+    function handleSelectDevices(device) {
+        localStorage.setItem("selected", device);
+        setIsViewNowIndex(device)
+    }
+
+
 
     return (
-        isLoading ?
+        state.isLoading ?
             <div style={{
                 display: 'flex',
                 flexDirection: 'row',
                 alignContent: 'center',
                 gap: '15px',
-                
+
             }}>
-                <div style={{margin: "auto 0"}}><Spinner size={30} color="#fff" loading={true} /></div>
-                <h3>Fetching Device List</h3>
+                <div style={{ margin: "auto 0" }}><Spinner size={30} color="#fff" loading={true} /></div>
+                <h3>{state.isLoading_Message}</h3>
             </div>
-        :
+            :
             <div style={{
                 display: "flex",
                 flexDirection: "row",
@@ -80,26 +116,24 @@ export default function DeviceList() {
                 left: 0,
                 top: 45,
                 zIndex: 0
-            }}> 
-        
+            }}>
+
                 <div style={{
                     width: "280px",
                     display: "flex",
                     flexDirection: "column",
                     marginLeft: "30px",
                     gap: "10px",
-        
+
                 }}>
-        
-                    <h2>Devices List</h2>
-                    
-                    {   
-                        
+
+                    <h2>Device List</h2>
+
+                    {
+
                         devices.map((device) => {
                             const index = device
-                            // if (isViewNowIndex === "")
-                            //     setIsViewNowIndex(index)
-        
+
                             if (device !== "List of devices attached" && device !== '')
                                 return (
                                     <div
@@ -118,12 +152,11 @@ export default function DeviceList() {
                                             zIndex: (isViewNowIndex === index) ? 1000 : 1,
                                             borderRadius: "15px",
                                             boxShadow: "0px 0px 5px 1px rgba(0, 0, 0, .4) ",
-        
-        
+
+
                                         }}
                                         onClick={() => {
-                                            setCurrentInfo("Loading...");
-                                            setIsViewNowIndex(device)
+                                            handleSelectDevices(device)
                                         }}
                                     >
                                         {device}
@@ -140,16 +173,15 @@ export default function DeviceList() {
                     zIndex: 100,
                     boxShadow: "0px 0px 5px 1px rgba(0, 0, 0, .4) ",
                     borderRadius: "15px",
-                    overflow: "scroll",
+                    overflow: "hidde",
                     // marginLeft: "-1px",
                 }}>
                     {/* detials */}
-                    <h2>Devices Info</h2>
-                    {isViewNowIndex}
-                    {currentInfo}
-                    
+                    <h2>Device Info</h2>
+                    {state.isLoading_Detial ? <div style={{ display: "flex", alignContent: "center", padding: "35%0 0 47%" }}><StageSpinner size={30} color="#fff" loading={true} /></div> : currentInfo}
+
                 </div>
             </div>
-        
+
     )
 }

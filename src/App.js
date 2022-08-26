@@ -1,22 +1,59 @@
 import React from "react";
-import logo from "./logo.svg";
+import { Command } from "@tauri-apps/api/shell";
 import "./App.css";
-import { Routes, Route, Link } from "react-router-dom";
+import "./index.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-
-import DeviceList from '../src/components/DeviceList'
-
+import Sidebar from "./components/Sidebar";
+import Uninstall from "./screens/Uninstall";
+import DeviceList from "./screens/DevicesList";
 
 function App() {
+  const [devices, setDevices] = React.useState([]);
+
+  React.useEffect(() => {
+    const getCMD = async () => {
+      let output = await new Command("devicesList", ["devices"]).execute();
+      const devicesList = await String(output.stdout).split("\n");
+      let devices = [];
+      // console.warn(devicesList.length);
+      if (devicesList.length > 2) {
+        for (let i = 1; i < devicesList.length; i++) {
+          if (!devicesList[i].endsWith("offline\n")){
+            const item = devicesList[i].split("device")[0].trim();
+            if(item !== "")
+            devices.push(item)
+          }
+            
+        }
+        setDevices(devices);
+      }else{
+        setDevices([])
+        localStorage.setItem("device", JSON.stringify([]))
+      }
+    };
+
+    getCMD();
+    setInterval(() => {
+      getCMD();
+      console.log("Fetching devices...");
+    }, 5000);
+  },[]);
+
+  React.useEffect(() => {
+    localStorage.setItem("device", JSON.stringify(devices));
+  }, [devices]);
 
   return (
-    <>
-      <div className="App">
-        <header className="App-header">
-          {/* <DeviceList /> */}
-        </header>
+    <BrowserRouter>
+      <div className="MainContainer">
+        <Sidebar />
+        <Routes>
+          <Route path="/" element={<DeviceList />} />
+          <Route path="/uninstall" element={<Uninstall />} />
+        </Routes>
       </div>
-    </>
+    </BrowserRouter>
   );
 }
 

@@ -23,7 +23,7 @@ export default function Uninstall() {
       <div className="App">
         <header className="App-header">
           {temp}
-          
+          0.0
         </header>
       </div>
     </>
