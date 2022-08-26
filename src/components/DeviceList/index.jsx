@@ -5,7 +5,7 @@ import { faTruckMedical } from "@fortawesome/free-solid-svg-icons";
 
 export default function DeviceList() {
     const [devices, setDevices] = React.useState([]);
-    const [isViewNowIndex, setIsViewNowIndex] = React.useState("");
+    const [isViewNowIndex, setIsViewNowIndex] = React.useState(localStorage.getItem("selectedDevice"));
     const [currentInfo, setCurrentInfo] = React.useState([]);
     const [state, setState] = React.useState({
         isLoading: true,
@@ -35,6 +35,7 @@ export default function DeviceList() {
                     ));
 
                 } else {
+                    console.log("devicesList.length !> 0")
                     setIsViewNowIndex("")
                     setState(pre => (
                         {
@@ -45,19 +46,16 @@ export default function DeviceList() {
                     ))
                 }
             } catch (e) {
-               console.error(e)
+            //    console.error(e)
             }
 
 
         };
 
-        if (isViewNowIndex == "")
-            handleSelectDevices(devices[0]);
-
         setInterval(() => {
-            console.error(isViewNowIndex)
+            console.log("isViewNowIndex=" + isViewNowIndex)
             getCMD()
-
+            
             console.log("Fetching devices from localStorage...")
         }, 5000);
     }, []);
@@ -88,8 +86,9 @@ export default function DeviceList() {
     }, [isViewNowIndex])
 
     function handleSelectDevices(device) {
-        localStorage.setItem("selected", device);
+        localStorage.setItem("selectedDevice", device);
         setIsViewNowIndex(device)
+        // console.warn(device)
     }
 
 
@@ -133,7 +132,8 @@ export default function DeviceList() {
 
                         devices.map((device) => {
                             const index = device
-
+                            if (isViewNowIndex === null) 
+                                handleSelectDevices(index);
                             if (device !== "List of devices attached" && device !== '')
                                 return (
                                     <div
