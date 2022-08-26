@@ -22,7 +22,7 @@ function App() {
           if (!devicesList[i].endsWith("offline\n")){
             const item = devicesList[i].split("device")[0].trim();
             if(item !== "")
-            devices.push(item)
+              devices.push(item)
           }
             
         }
