@@ -1,6 +1,7 @@
 import React from 'react'
 import { Command } from '@tauri-apps/api/shell';
 
+
 export default function Uninstall() {
 
   
@@ -21,7 +22,8 @@ export default function Uninstall() {
     <>
       <div className="App">
         <header className="App-header">
-          {temp}0.0
+          {temp}
+          
         </header>
       </div>
     </>
