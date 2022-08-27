@@ -5,7 +5,7 @@ import { faTruckMedical } from "@fortawesome/free-solid-svg-icons";
 
 export default function DeviceList() {
     const [devices, setDevices] = React.useState([]);
-    const [isViewNowIndex, setIsViewNowIndex] = React.useState(localStorage.getItem("selectedDevice"));
+    const [isViewNowIndex, setIsViewNowIndex] = React.useState("");
     const [currentInfo, setCurrentInfo] = React.useState([]);
     const [state, setState] = React.useState({
         isLoading: true,
@@ -13,6 +13,13 @@ export default function DeviceList() {
         isLoading_Detial: true,
 
     });
+
+    React.useEffect(() => {
+        if(isViewNowIndex === "" || isViewNowIndex === undefined){
+            setIsViewNowIndex(devices[0])
+            console.log("Auto Setting isViewNowIndex to " + devices[0])
+        }
+    },[devices])
 
     const TempList = ["R5CR30CVTZX device", "emulator-5554 device", "emulator-5556 device"]
 
@@ -26,6 +33,7 @@ export default function DeviceList() {
                     console.log(devicesList)
 
                     setDevices(devicesList)
+                        
                     
                     setState(pre => (
                         {
@@ -46,7 +54,7 @@ export default function DeviceList() {
                     ))
                 }
             } catch (e) {
-            //    console.error(e)
+               console.error(e)
             }
 
 
@@ -132,8 +140,7 @@ export default function DeviceList() {
 
                         devices.map((device) => {
                             const index = device
-                            if (isViewNowIndex === null) 
-                                handleSelectDevices(index);
+
                             if (device !== "List of devices attached" && device !== '')
                                 return (
                                     <div
