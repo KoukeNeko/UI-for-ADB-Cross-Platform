@@ -18,11 +18,11 @@
   height: 30px;
 }
 #titlebar-minimize {
-  color: #243b4a
+  color: #243b4a;
 }
 
 #titlebar-close {
-  color: #243b4a
+  color: #243b4a;
 }
 
 #titlebar-minimize:hover {
@@ -33,6 +33,28 @@
   color: #b54d4d !important;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  opacity: 0.5;
+  border-radius: 15px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 15px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
 
 
 .MainContainer {

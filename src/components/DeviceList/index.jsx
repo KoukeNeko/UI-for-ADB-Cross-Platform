@@ -80,7 +80,31 @@ export default function DeviceList() {
         const getCMD_Info = async () => {
             let output = await new Command("devicesInfo", ["-s", isViewNowIndex, "shell", "getprop"]).execute();
             const output_sp = await String(output.stdout);
-            setCurrentInfo(output_sp);
+            let temp = output_sp.split("\n");
+            for(let i = 0 ; i < temp.length ; i++) {
+                temp[i] = temp[i].split(":").map(item => item.replace('[','').replace(']',''))
+                temp[i] = 
+                <div style={{
+                    backgroundColor: '#243b4a',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '55px',
+                    // width: "200px",
+                    justifyContent: 'space-evenly',
+                    fontSize: '15px',
+                    textAlign: 'left',
+                    borderRadius: '15px',
+                    paddingLeft: '10px',
+                    paddingRight: '10px',
+                    margin: "5px 10px",
+                    overflow: 'hidden',
+                    
+                }}>
+                    <div style={{fontWeight: 'bold', width: '100%'}}>{temp[i][0]}</div>
+                    <div style={{color: 'darkgrey'}}>{temp[i][1]}</div>
+                </div>
+            }
+            setCurrentInfo(temp);
 
         };
         getCMD_Info();
@@ -180,12 +204,27 @@ export default function DeviceList() {
                     zIndex: 100,
                     boxShadow: "0px 0px 5px 1px rgba(0, 0, 0, .4) ",
                     borderRadius: "15px",
-                    overflow: "hidde",
+                    overflow: "hidden",
+                    // overflowX: "hidden",
                     // marginLeft: "-1px",
                 }}>
                     {/* detials */}
-                    <h2>Device Info</h2>
-                    {state.isLoading_Detial ? <div style={{ display: "flex", alignContent: "center", padding: "35%0 0 47%" }}><StageSpinner size={30} color="#fff" loading={true} /></div> : currentInfo}
+                    <h2>Debug Device Info</h2>
+                    {state.isLoading_Detial 
+                    ? 
+                    <div style={{ display: "flex", alignContent: "center", padding: "35%0 0 47%" }}><StageSpinner size={30} color="#fff" loading={true} /></div> 
+                    : 
+                    <div style={{
+                        overflowX: "hidden",
+                        overflowY: "scroll",
+                        height: "380px",
+
+                        // borderRadius: "15px",
+                        // backgroundColor: "rgba(255, 255, 255, 0.5)",
+   
+                    }}>
+                        {currentInfo}
+                    </div>}
 
                 </div>
             </div>

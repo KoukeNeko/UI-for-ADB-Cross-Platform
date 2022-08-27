@@ -27,6 +27,11 @@
             "name": "devicesInfo",
             "cmd": "adb",
             "args": ["-s",{ "validator": "\\S+" },"shell","getprop"]
+          },
+          {
+            "name": "applist",
+            "cmd": "adb",
+            "args": ["-s","shell","pm","list","packages"]
           }
         ],
         "sidecar": false
