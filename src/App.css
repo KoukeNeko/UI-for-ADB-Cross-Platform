@@ -56,6 +56,10 @@
   background: #555; 
 }
 
+.swal2-show{
+  border-radius: 15px;
+}
+
 
 .MainContainer {
   position: absolute;

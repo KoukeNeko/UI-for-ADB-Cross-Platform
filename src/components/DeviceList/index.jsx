@@ -1,12 +1,18 @@
 import React from "react";
 import { Command } from "@tauri-apps/api/shell";
 import { RotateSpinner as Spinner, StageSpinner } from "react-spinners-kit";
-import { faTruckMedical } from "@fortawesome/free-solid-svg-icons";
+
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 export default function DeviceList() {
     const [devices, setDevices] = React.useState([]);
     const [isViewNowIndex, setIsViewNowIndex] = React.useState("");
     const [currentInfo, setCurrentInfo] = React.useState([]);
+    const [buttons, setButtons] = React.useState({
+        key: "Copy Key!",
+        value: "Copy Value!",
+    });
     const [state, setState] = React.useState({
         isLoading: true,
         isLoading_Message: "Fetching Device List",
@@ -15,11 +21,11 @@ export default function DeviceList() {
     });
 
     React.useEffect(() => {
-        if(isViewNowIndex === "" || isViewNowIndex === undefined){
+        if (isViewNowIndex === "" || isViewNowIndex === undefined) {
             setIsViewNowIndex(devices[0])
             console.log("Auto Setting isViewNowIndex to " + devices[0])
         }
-    },[devices])
+    }, [devices])
 
     const TempList = ["R5CR30CVTZX device", "emulator-5554 device", "emulator-5556 device"]
 
@@ -33,8 +39,8 @@ export default function DeviceList() {
                     console.log(devicesList)
 
                     setDevices(devicesList)
-                        
-                    
+
+
                     setState(pre => (
                         {
                             ...pre,
@@ -54,7 +60,7 @@ export default function DeviceList() {
                     ))
                 }
             } catch (e) {
-               console.error(e)
+                console.error(e)
             }
 
 
@@ -63,7 +69,7 @@ export default function DeviceList() {
         setInterval(() => {
             console.log("isViewNowIndex=" + isViewNowIndex)
             getCMD()
-            
+
             console.log("Fetching devices from localStorage...")
         }, 5000);
     }, []);
@@ -81,28 +87,88 @@ export default function DeviceList() {
             let output = await new Command("devicesInfo", ["-s", isViewNowIndex, "shell", "getprop"]).execute();
             const output_sp = await String(output.stdout);
             let temp = output_sp.split("\n");
-            for(let i = 0 ; i < temp.length ; i++) {
-                temp[i] = temp[i].split(":").map(item => item.replace('[','').replace(']',''))
-                temp[i] = 
-                <div style={{
-                    backgroundColor: '#243b4a',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: '55px',
-                    // width: "200px",
-                    justifyContent: 'space-evenly',
-                    fontSize: '15px',
-                    textAlign: 'left',
-                    borderRadius: '15px',
-                    paddingLeft: '10px',
-                    paddingRight: '10px',
-                    margin: "5px 10px",
-                    overflow: 'hidden',
-                    
-                }}>
-                    <div style={{fontWeight: 'bold', width: '100%'}}>{temp[i][0]}</div>
-                    <div style={{color: 'darkgrey'}}>{temp[i][1]}</div>
-                </div>
+            for (let i = 0; i < temp.length; i++) {
+                temp[i] = temp[i].split(":").map(item => item.replace('[', '').replace(']', ''))
+                const title = temp[i][0]
+                const value = temp[i][1]
+                temp[i] =
+                    <div style={{
+                        backgroundColor: '#243b4a',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '55px',
+                        // width: "370px",
+                        justifyContent: 'space-evenly',
+                        fontSize: '15px',
+                        textAlign: 'left',
+                        borderRadius: '15px',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        margin: "5px 10px",
+                        overflow: 'hidden',
+
+                    }}
+                        onClick={(event) => {
+                            const MySwal = withReactContent(Swal)
+                            MySwal.fire({
+                                title: <p>{title}</p>,
+                                html: <h3>{value}</h3>,
+                                showCancelButton: true,
+                                showDenyButton: true,
+                                focusConfirm: false,
+                                confirmButtonText:`<i class="fa-solid fa-copy"></i> ${buttons['value']}`,
+                                confirmButtonAriaLabel: 'Copy Value!',
+                                denyButtonText: `<i class="fa-solid fa-copy"></i> ${buttons['key']}`,
+                                cancelButtonText:
+                                    'Close',
+                                cancelButtonAriaLabel: 'Close',
+                                background: "#2d4654",
+                                color: "#fff",
+                                
+                                customClass: {
+                                    popup: 
+                                        "swal2-show",
+                                    
+                                },
+                                preConfirm: () => {
+
+                                        const copy  = async() => {
+                                            await navigator.clipboard.writeText(value)      
+                                          }
+                                          copy()
+                                        //   setButtons(pre => ({
+                                        //     ...pre,
+                                        //     value: "Value Copied!"
+                                        //   }))
+                                      return false; // Prevent confirmed
+                                  },
+                                preDeny: () => {
+                                    const copy  = async() => {
+                                        await navigator.clipboard.writeText(title)      
+                                      }
+                                      copy()
+                                    //   setButtons(pre => ({
+                                    //     ...pre,
+                                    //     key: "Key Copied!"
+                                    //   }))
+                                    return false;
+                                }
+                            // didOpen: () => {
+                            //         // `MySwal` is a subclass of `Swal` with all the same instance & static methods
+                            //         MySwal.showLoading()
+                            //     },
+                            // })
+                            })
+                            .then(
+                                setButtons({
+                                    key: "Copy Key!",
+                                    value: "Copy Value!",
+                                })
+                            )
+                        }}>
+                        <div style={{ fontWeight: 'bold', width: '360px' }}>{title}</div>
+                        <div style={{ color: 'darkgrey' }}>{value}</div>
+                    </div>
             }
             setCurrentInfo(temp);
 
@@ -210,21 +276,21 @@ export default function DeviceList() {
                 }}>
                     {/* detials */}
                     <h2>Debug Device Info</h2>
-                    {state.isLoading_Detial 
-                    ? 
-                    <div style={{ display: "flex", alignContent: "center", padding: "35%0 0 47%" }}><StageSpinner size={30} color="#fff" loading={true} /></div> 
-                    : 
-                    <div style={{
-                        overflowX: "hidden",
-                        overflowY: "scroll",
-                        height: "380px",
+                    {state.isLoading_Detial
+                        ?
+                        <div style={{ display: "flex", alignContent: "center", padding: "35%0 0 47%" }}><StageSpinner size={30} color="#fff" loading={true} /></div>
+                        :
+                        <div style={{
+                            overflowX: "hidden",
+                            overflowY: "scroll",
+                            height: "380px",
 
-                        // borderRadius: "15px",
-                        // backgroundColor: "rgba(255, 255, 255, 0.5)",
-   
-                    }}>
-                        {currentInfo}
-                    </div>}
+                            // borderRadius: "15px",
+                            // backgroundColor: "rgba(255, 255, 255, 0.5)",
+
+                        }}>
+                            {currentInfo}
+                        </div>}
 
                 </div>
             </div>
