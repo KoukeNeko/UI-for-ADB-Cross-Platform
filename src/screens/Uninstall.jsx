@@ -46,7 +46,7 @@ export default function Uninstall() {
                     // overflowX: "hidden",
                     // marginLeft: "-1px",
                 }}>
-                <h2>Package List</h2>
+                <h3>Package List</h3>
                 <PackageList height="330px"/>
                 <div style={{
                     width: "95%",
@@ -57,7 +57,8 @@ export default function Uninstall() {
                     backgroundColor: "white",
                     display: "flex",
                     justifyContent: "space-between",
-                    overflow: "hidden",
+                    alignItems: "center",
+                    // overflow: "hidden",
                   }} >
                   <input 
                   placeholder='Search...'
@@ -66,11 +67,12 @@ export default function Uninstall() {
                     borderWidth: "0",
                     width: "100%",
                     marginLeft: "10px",
+                    outline: "none",
                   }}>
                   </input>
                   <button style={{
                     width: "50px",
-                    height: "30px",
+                    height: "40px",
                     borderRadius: "15px",
                     borderWidth: "0",
                     backgroundColor: "#243b4a"

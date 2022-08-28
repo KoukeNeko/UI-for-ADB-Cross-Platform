@@ -232,7 +232,7 @@ export default function DeviceList() {
                     // marginLeft: "-1px",
                 }}>
                     {/* detials */}
-                    <h2>Debug Device Info</h2>
+                    <h3>Debug Device Info</h3>
                     {state.isLoading_Detial
                         ?
                         <div style={{ display: "flex", alignContent: "center", padding: "35%0 0 47%" }}><StageSpinner size={30} color="#fff" loading={true} /></div>
