@@ -5,6 +5,8 @@ import { RotateSpinner as Spinner, StageSpinner } from "react-spinners-kit";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
+import ListButton from "../ListButton";
+
 export default function DeviceList() {
     const [devices, setDevices] = React.useState([]);
     const [isViewNowIndex, setIsViewNowIndex] = React.useState("");
@@ -91,84 +93,39 @@ export default function DeviceList() {
                 temp[i] = temp[i].split(":").map(item => item.replace('[', '').replace(']', ''))
                 const title = temp[i][0]
                 const value = temp[i][1]
-                temp[i] =
-                    <div style={{
-                        backgroundColor: '#243b4a',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        height: '55px',
-                        // width: "370px",
-                        justifyContent: 'space-evenly',
-                        fontSize: '15px',
-                        textAlign: 'left',
-                        borderRadius: '15px',
-                        paddingLeft: '10px',
-                        paddingRight: '10px',
-                        margin: "5px 10px",
-                        overflow: 'hidden',
+                temp[i] = <ListButton title={title} value={value} onClickFunction={() => {
+                    const MySwal = withReactContent(Swal)
+                    MySwal.fire({
+                        title: <p>{title}</p>,
+                        html: <h3>{value}</h3>,
+                        showCancelButton: true,
+                        showDenyButton: true,
+                        focusConfirm: false,
+                        confirmButtonText: `<i class="fa-solid fa-copy"></i> ${buttons['value']}`,
+                        confirmButtonAriaLabel: 'Copy Value!',
+                        denyButtonText: `<i class="fa-solid fa-copy"></i> ${buttons['key']}`,
+                        cancelButtonText: 'Close',
+                        cancelButtonAriaLabel: 'Close',
+                        background: "#2d4654",
+                        color: "#fff",
+                        preConfirm: () => {
 
-                    }}
-                        onClick={(event) => {
-                            const MySwal = withReactContent(Swal)
-                            MySwal.fire({
-                                title: <p>{title}</p>,
-                                html: <h3>{value}</h3>,
-                                showCancelButton: true,
-                                showDenyButton: true,
-                                focusConfirm: false,
-                                confirmButtonText:`<i class="fa-solid fa-copy"></i> ${buttons['value']}`,
-                                confirmButtonAriaLabel: 'Copy Value!',
-                                denyButtonText: `<i class="fa-solid fa-copy"></i> ${buttons['key']}`,
-                                cancelButtonText:
-                                    'Close',
-                                cancelButtonAriaLabel: 'Close',
-                                background: "#2d4654",
-                                color: "#fff",
-                                
-                                customClass: {
-                                    popup: 
-                                        "swal2-show",
-                                    
-                                },
-                                preConfirm: () => {
-
-                                        const copy  = async() => {
-                                            await navigator.clipboard.writeText(value)      
-                                          }
-                                          copy()
-                                        //   setButtons(pre => ({
-                                        //     ...pre,
-                                        //     value: "Value Copied!"
-                                        //   }))
-                                      return false; // Prevent confirmed
-                                  },
-                                preDeny: () => {
-                                    const copy  = async() => {
-                                        await navigator.clipboard.writeText(title)      
-                                      }
-                                      copy()
-                                    //   setButtons(pre => ({
-                                    //     ...pre,
-                                    //     key: "Key Copied!"
-                                    //   }))
-                                    return false;
-                                }
-                            // didOpen: () => {
-                            //         // `MySwal` is a subclass of `Swal` with all the same instance & static methods
-                            //         MySwal.showLoading()
-                            //     },
-                            // })
-                            })
-                            .then(
-                                setButtons({
-                                    key: "Copy Key!",
-                                    value: "Copy Value!",
-                                })
-                            )
-                        }}>
-                        <div style={{ fontWeight: 'bold', width: '360px' }}>{title}</div>
-                        <div style={{ color: 'darkgrey' }}>{value}</div>
-                    </div>
+                            const copy = async () => {
+                                await navigator.clipboard.writeText(value)
+                            }
+                            copy()
+                            return false; // Prevent confirmed
+                        },
+                        preDeny: () => {
+                            const copy = async () => {
+                                await navigator.clipboard.writeText(title)
+                            }
+                            copy()
+                            return false;
+                        }
+                    })
+                }}
+                />
             }
             setCurrentInfo(temp);
 
