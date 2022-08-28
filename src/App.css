@@ -56,8 +56,9 @@
   background: #555; 
 }
 
-.swal2-show{
-  border-radius: 15px;
+.popup-window-alert{
+  border-radius: 15px !important;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15) !important
 }
 
 

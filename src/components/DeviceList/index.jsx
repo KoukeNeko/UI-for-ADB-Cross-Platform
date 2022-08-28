@@ -108,6 +108,9 @@ export default function DeviceList() {
                         cancelButtonAriaLabel: 'Close',
                         background: "#2d4654",
                         color: "#fff",
+                        customClass: {
+                            popup: "popup-window-alert"
+                        },
                         preConfirm: () => {
 
                             const copy = async () => {
