@@ -84,7 +84,7 @@
         "title": "Uninstall Android App Without ROOT",
         "width": 800,
         "decorations": false,
-        "alwaysOnTop": true
+        "alwaysOnTop": false
       }
     ]
   }
