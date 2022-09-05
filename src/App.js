@@ -36,7 +36,7 @@ function App() {
     getCMD();
     setInterval(() => {
       getCMD();
-      console.log("Fetching devices...");
+      // console.log("Fetching devices...");
     }, 5000);
   },[]);
 

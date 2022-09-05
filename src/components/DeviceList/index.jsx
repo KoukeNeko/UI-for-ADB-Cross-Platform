@@ -9,7 +9,7 @@ import ListButton from "../ListButton";
 
 export default function DeviceList() {
     const [devices, setDevices] = React.useState([]);
-    const [isViewNowIndex, setIsViewNowIndex] = React.useState("");
+    const [isViewNowIndex, setIsViewNowIndex] = React.useState(localStorage.getItem("selectedDevice") || "");
     const [currentInfo, setCurrentInfo] = React.useState([]);
     const [buttons, setButtons] = React.useState({
         key: "Copy Key!",
@@ -25,7 +25,7 @@ export default function DeviceList() {
     React.useEffect(() => {
         if (isViewNowIndex === "" || isViewNowIndex === undefined) {
             setIsViewNowIndex(devices[0])
-            console.log("Auto Setting isViewNowIndex to " + devices[0])
+            // console.log("Auto Setting isViewNowIndex to " + devices[0])
         }
     }, [devices])
 
@@ -38,11 +38,8 @@ export default function DeviceList() {
                 const devicesList = JSON.parse(output);
 
                 if (devicesList.length > 0) {
-                    console.log(devicesList)
-
+                    // console.log(devicesList)
                     setDevices(devicesList)
-
-
                     setState(pre => (
                         {
                             ...pre,
@@ -69,10 +66,10 @@ export default function DeviceList() {
         };
 
         setInterval(() => {
-            console.log("isViewNowIndex=" + isViewNowIndex)
+            // console.log("isViewNowIndex=" + isViewNowIndex)
             getCMD()
 
-            console.log("Fetching devices from localStorage...")
+            // console.log("Fetching devices from localStorage...")
         }, 5000);
     }, []);
 
@@ -148,8 +145,6 @@ export default function DeviceList() {
         setIsViewNowIndex(device)
         // console.warn(device)
     }
-
-
 
     return (
         state.isLoading ?

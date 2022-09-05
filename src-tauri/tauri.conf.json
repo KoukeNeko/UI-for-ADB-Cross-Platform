@@ -31,7 +31,7 @@
           {
             "name": "applist",
             "cmd": "adb",
-            "args": ["-s","shell","pm","list","packages"]
+            "args": ["-s",{ "validator": "\\S+" },"shell","pm","list","packages"]
           }
         ],
         "sidecar": false

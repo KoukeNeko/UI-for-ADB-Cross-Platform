@@ -1,24 +1,48 @@
 import React from 'react'
 import { Command } from '@tauri-apps/api/shell';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 import PackageList from '../components/PackageList/';
 import PackageInfo from '../components/PackageInfo';
+
+import PhoneSelectButton from '../components/PhoneSelectButton';
 
 export default function Uninstall() {
 
   
 
-  const [temp, setTemp] = React.useState("")
+  const [devices, setDevices] = React.useState([])
+  const [selected, setSelected] = React.useState({
+    devices: localStorage.getItem("selectedDevice"),
+    packages: ""
+  })
 
   React.useEffect(() => {
-    const getCMD = async () => {
-      let output = await new Command('run-git-commit').execute();
-      setTemp(output.stdout)
-    }
-     getCMD()
+
+    setDevices(JSON.parse(localStorage.getItem("device")) , 5000)
+    //get Device list
+    setInterval(() => setDevices(JSON.parse(localStorage.getItem("device"))) , 5000)
+
   },[])
 
-  
+  // React.useEffect(() => {
+  //   const getCMD = async () => {
+  //     let output = await new Command('applist').execute();
+  //     const outputList = await String(output.stdout).split("\n");
+  //     setPackages(output.stdout)
+  //   }
+  //   getCMD()
+  // },[selected])
+
+
+  const handleChangeSelectedDevice = (device) => {
+    setSelected({
+      ...selected,
+      devices: device
+    })
+    localStorage.setItem("selectedDevice", device)
+  }
 
   return (
     <>
@@ -28,15 +52,22 @@ export default function Uninstall() {
             display: 'flex',
             flexDirection: 'row',
             alignContent: 'center',
-            // height: '100vh',
-            // width: '100%',
-            gap: "15px",
+            height: '90vh',
+            width: '90%',
+            gap: "20px",
             paddingTop: "70px",
             // backgroundColor: 'rgba(255,255,255,0.5)',
           }}>
+            <div>
+              {devices.map((device, index) => {
+                return (
+                  <PhoneSelectButton isselected={selected.devices} name={device} onClickFunction={()=>handleChangeSelectedDevice(device)}/>
+                )
+              })}
+            </div>
             <div style={{
                     backgroundColor: "#87bcde",
-                    width: "60%",
+                    width: "45%",
                     marginRight: "6%",
                     marginBottom: "10%",
                     zIndex: 100,
@@ -46,8 +77,11 @@ export default function Uninstall() {
                     // overflowX: "hidden",
                     // marginLeft: "-1px",
                 }}>
+  
                 <h3>Package List</h3>
-                <PackageList height="330px"/>
+                <PackageList height="330px" device={selected.devices} onClickFunction={()=> {
+                  
+                }}/>
                 <div style={{
                     width: "95%",
                     height: "30px",
