@@ -8,7 +8,7 @@ import ListButton from '../ListButton'
 export default function PackageList(props) {
 
   const [packages, setPackages] = React.useState([])
-  const [packageelement, setPackageElement] = React.useState([])
+  const [packageelement, setPackageElement] = React.useState()
   const [search, setSearch] = React.useState("")
 
   const getPackageInfo = async () => {
@@ -21,23 +21,15 @@ export default function PackageList(props) {
     setPackages(output_sp)
   }
 
-  React.useEffect(() => {
-    
+  function handlePackageList() {
     getPackageInfo()
+    
+  }
 
-    setPackageElement(
-      packages.map((package_, index) => {
-          return <ListButton
-                key={index}
-                title={package_}
-                onClickFunction={() => handleClick(package_)}
-                isselected={props.isselected}
-              />
-      })
-    )
+  React.useEffect(() => {
+    handlePackageList()
   }, [])
-
-
+  
   React.useEffect(() => {
     setPackageElement(
       packages.map((package_, index) => {
@@ -60,7 +52,8 @@ export default function PackageList(props) {
         }
       })
     )
-  },[search])
+  }, [packages, search])
+
 
   function handleLog(message) {
     const logArray = JSON.parse(localStorage.getItem("log")) || []
@@ -76,9 +69,9 @@ export default function PackageList(props) {
       showCancelButton: true,
       showDenyButton: true,
       focusConfirm: false,
-      confirmButtonText: `<i class="fa-solid fa-copy"></i> Uninstall`,
+      confirmButtonText: `<i class="fa-solid fa-trash-can"></i> Uninstall`,
       confirmButtonAriaLabel: 'Copy Value!',
-      denyButtonText: `<i class="fa-solid fa-copy"></i> Uninstall (keep data)`,
+      denyButtonText: `<i class="fa-solid fa-trash-can"></i> Uninstall (keep data)`,
       cancelButtonText: 'Close',
       cancelButtonAriaLabel: 'Close',
       background: "#2d4654",
@@ -122,7 +115,7 @@ export default function PackageList(props) {
           }
         })
         .finally(() => {
-          getPackageInfo()
+          handlePackageList()
         })
         // return false; // Prevent confirmed
       },
@@ -131,8 +124,15 @@ export default function PackageList(props) {
         const Uninstall = async () => {
           let output = await new Command("appuninstall", ["-s", props.device, "shell", "pm", "uninstall","", "--user", "0", item]).execute();
           const output_sp = await String(output.stdout);
-          if (output_sp.includes("Success")) {
-            MySwal.fire({
+          return output_sp
+        }
+
+        Uninstall()
+        .then((output) => {
+          console.error(output)
+          if (output.includes("Success")) {
+            handleLog("Uninstall " + item + " Success")
+            return MySwal.fire({
               title: <p>Success</p>,
               icon: "success",
               background: "#2d4654",
@@ -142,7 +142,8 @@ export default function PackageList(props) {
               },
             })
           }else{
-            MySwal.fire({
+            handleLog("Uninstall " + item + " Failed")
+            return MySwal.fire({
               title: <p>Error</p>,
               icon: "error",
               background: "#2d4654",
@@ -152,10 +153,11 @@ export default function PackageList(props) {
               },
             })
           }
-        }
-
-        Uninstall()
-        // return false;
+        })
+        .finally(() => {
+          handlePackageList()
+        })
+        // return false; // Prevent confirmed
       }
     })
   }
