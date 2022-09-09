@@ -36,13 +36,13 @@ export default function Uninstall() {
   // },[selected])
 
 
-  const handleChangeSelectedDevice = (device) => {
-    setSelected({
-      ...selected,
-      devices: device
-    })
-    localStorage.setItem("selectedDevice", device)
-  }
+  // const handleChangeSelectedDevice = (device) => {
+  //   setSelected({
+  //     ...selected,
+  //     devices: device
+  //   })
+  //   localStorage.setItem("selectedDevice", device)
+  // }
 
   return (
     <>
@@ -61,14 +61,14 @@ export default function Uninstall() {
             <div>
               {devices.map((device, index) => {
                 return (
-                  <PhoneSelectButton isselected={selected.devices} name={device} onClickFunction={()=>handleChangeSelectedDevice(device)}/>
+                  <PhoneSelectButton isselected={selected.devices} name={device}/>
                 )
               })}
             </div>
             <div style={{
                     backgroundColor: "#87bcde",
-                    width: "45%",
-                    marginRight: "6%",
+                    width: "560px",
+                    // marginRight: "6%",
                     marginBottom: "10%",
                     zIndex: 100,
                     boxShadow: "0px 0px 5px 1px rgba(0, 0, 0, .4) ",
@@ -82,40 +82,9 @@ export default function Uninstall() {
                 <PackageList height="330px" device={selected.devices} onClickFunction={()=> {
                   
                 }}/>
-                <div style={{
-                    width: "95%",
-                    height: "30px",
-                    margin: "10px auto",
-                    borderRadius: "15px",
-                    borderWidth: "0",
-                    backgroundColor: "white",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    // overflow: "hidden",
-                  }} >
-                  <input 
-                  placeholder='Search...'
-                  style={{
-                    backgroundColor: "transparent",
-                    borderWidth: "0",
-                    width: "100%",
-                    marginLeft: "10px",
-                    outline: "none",
-                  }}>
-                  </input>
-                  <button style={{
-                    width: "50px",
-                    height: "40px",
-                    borderRadius: "15px",
-                    borderWidth: "0",
-                    backgroundColor: "#243b4a"
-                  }}>
-                    <i class="fa-solid fa-magnifying-glass" style={{color: "white"}}></i>
-                  </button>
-                </div>
+                
               </div>
-            <PackageInfo />
+            {/* <PackageInfo /> */}
           </div>
         </header>
       </div>
