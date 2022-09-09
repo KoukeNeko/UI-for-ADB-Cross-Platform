@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Uninstall from "./screens/Uninstall";
 import DeviceList from "./screens/DevicesList";
+import Log from "./screens/Log";
 
 function App() {
   const [devices, setDevices] = React.useState([]);
@@ -51,6 +52,7 @@ function App() {
         <Routes>
           <Route path="/" element={<DeviceList />} />
           <Route path="/uninstall" element={<Uninstall />} />
+          <Route path="/Log" element={<Log />} />
         </Routes>
       </div>
     </BrowserRouter>

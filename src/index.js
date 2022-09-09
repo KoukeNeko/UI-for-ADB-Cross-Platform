@@ -23,7 +23,8 @@ document
 document
   .getElementById("titlebar-close")
   .addEventListener("click", () => appWindow.close());
-
+  
+document.addEventListener('contextmenu', event => event.preventDefault());
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>

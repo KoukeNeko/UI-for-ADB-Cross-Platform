@@ -48,16 +48,16 @@ export default function Sidebar(props) {
           </Link>
 
           <Link
-            to="/settings"
+            to="/Log"
             style={{
               color: "#fff",
               textDecoration: "none",
               position: "absolute",
               bottom: "15px",  
             }}
-            onMouseEnter={()=>setMouseHoverItem("Setting")} onMouseLeave={()=>setMouseHoverItem("")} onClick={()=>setCurrentPage("Setting")}
+            onMouseEnter={()=>setMouseHoverItem("Log")} onMouseLeave={()=>setMouseHoverItem("")} onClick={()=>setCurrentPage("Log")}
           >
-            <MenuListButton name="Setting" isMenuOpen={isOpen} icon="fa-solid fa-gear" onMuse={mouseHoverItem} isSelected={currentPage === "Setting"}/>
+            <MenuListButton name="Log" isMenuOpen={isOpen} icon="fa-solid fa-square-minus" onMuse={mouseHoverItem} isSelected={currentPage === "Log"}/>
           </Link>
         </div>
       </div>
