@@ -32,6 +32,11 @@
             "name": "applist",
             "cmd": "adb",
             "args": ["-s",{ "validator": "\\S+" },"shell","pm","list","packages"]
+          },
+          {
+            "name": "appuninstall",
+            "cmd": "adb",
+            "args": ["-s",{ "validator": "\\S+" },"shell","pm","uninstall",{ "validator": "\\S+" }, "--user", "0", { "validator": "\\S+" }]
           }
         ],
         "sidecar": false

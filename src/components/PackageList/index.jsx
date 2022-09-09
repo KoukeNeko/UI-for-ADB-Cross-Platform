@@ -11,16 +11,18 @@ export default function PackageList(props) {
   const [packageelement, setPackageElement] = React.useState([])
   const [search, setSearch] = React.useState("")
 
+  const getPackageInfo = async () => {
+    let output = await new Command("applist", ["-s", props.device, "shell", "pm", "list", "packages"]).execute();
+    const output_sp = await String(output.stdout).split("\n");
+    output_sp.map((item, index) => {
+      output_sp[index] = item.replace("package:", "")
+    })
+    // console.log(output_sp)
+    setPackages(output_sp)
+  }
+
   React.useEffect(() => {
-    const getPackageInfo = async () => {
-      let output = await new Command("applist", ["-s", props.device, "shell", "pm", "list", "packages"]).execute();
-      const output_sp = await String(output.stdout).split("\n");
-      output_sp.map((item, index) => {
-        output_sp[index] = item.replace("package:", "")
-      })
-      console.log(output_sp)
-      setPackages(output_sp)
-    }
+    
     getPackageInfo()
 
     setPackageElement(
@@ -47,7 +49,7 @@ export default function PackageList(props) {
                 isselected={props.isselected}
               />
         }else{
-          if (package_.includes(search)) {
+          if (package_.toLowerCase().includes(search.toLowerCase())) {
             return <ListButton
                 key={index}
                 title={package_}
@@ -59,6 +61,12 @@ export default function PackageList(props) {
       })
     )
   },[search])
+
+  function handleLog(message) {
+    const logArray = JSON.parse(localStorage.getItem("log")) || []
+    logArray.unshift(message)
+    localStorage.setItem("log", JSON.stringify(logArray))
+  }
 
   function handleClick(item) {
     const MySwal = withReactContent(Swal)
@@ -80,12 +88,74 @@ export default function PackageList(props) {
       },
       preConfirm: () => {
 
-       
-        return false; // Prevent confirmed
+        const Uninstall = async () => {
+          let output = await new Command("appuninstall", ["-s", props.device, "shell", "pm", "uninstall","-k", "--user", "0", item]).execute();
+          const output_sp = await String(output.stdout);
+          return output_sp
+        }
+
+        Uninstall()
+        .then((output) => {
+          console.error(output)
+          if (output.includes("Success")) {
+            handleLog("Uninstall " + item + " Success")
+            return MySwal.fire({
+              title: <p>Success</p>,
+              icon: "success",
+              background: "#2d4654",
+              color: "#fff",
+              customClass: {
+                popup: "popup-window-alert"
+              },
+            })
+          }else{
+            handleLog("Uninstall " + item + " Failed")
+            return MySwal.fire({
+              title: <p>Error</p>,
+              icon: "error",
+              background: "#2d4654",
+              color: "#fff",
+              customClass: {
+                popup: "popup-window-alert"
+              },
+            })
+          }
+        })
+        .finally(() => {
+          getPackageInfo()
+        })
+        // return false; // Prevent confirmed
       },
       preDeny: () => {
        
-        return false;
+        const Uninstall = async () => {
+          let output = await new Command("appuninstall", ["-s", props.device, "shell", "pm", "uninstall","", "--user", "0", item]).execute();
+          const output_sp = await String(output.stdout);
+          if (output_sp.includes("Success")) {
+            MySwal.fire({
+              title: <p>Success</p>,
+              icon: "success",
+              background: "#2d4654",
+              color: "#fff",
+              customClass: {
+                popup: "popup-window-alert"
+              },
+            })
+          }else{
+            MySwal.fire({
+              title: <p>Error</p>,
+              icon: "error",
+              background: "#2d4654",
+              color: "#fff",
+              customClass: {
+                popup: "popup-window-alert"
+              },
+            })
+          }
+        }
+
+        Uninstall()
+        // return false;
       }
     })
   }
@@ -131,6 +201,7 @@ export default function PackageList(props) {
       }} >
         <input
           onChange={(e) => setSearch(e.target.value)}
+          value={search}
           placeholder='Search...'
           style={{
             backgroundColor: "transparent",

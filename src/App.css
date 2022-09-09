@@ -61,6 +61,9 @@
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15) !important
 }
 
+.swal2-styled {
+  border-radius: 15px !important;
+}
 
 .MainContainer {
   position: absolute;
